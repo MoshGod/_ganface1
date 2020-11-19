@@ -4,14 +4,18 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-def plot_eps_acc(attack_method_str, epss, accuracy):
-    plt.xticks(np.arange(0, 1.1,0.1))
-    plt.yticks(np.arange(0, 101, 10))
+def plot_eps_acc(attack_method_str, epss, accuracy, savedir, is_save=False):
+
     plt.ylim(0, 100)
+    plt.xticks(np.arange(0, 1.1, 0.1))
+    plt.yticks(np.arange(0, 101, 10))
     plt.plot(epss, accuracy)
     plt.title(attack_method_str)
     plt.xlabel("eps")
     plt.ylabel("deception rate")
+
+    if is_save:
+        plt.savefig(savedir)
     plt.show()
 
 def plot_image(img, label, name):

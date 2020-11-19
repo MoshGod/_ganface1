@@ -57,7 +57,8 @@ for images, labels in test_loader:
     if flag:
         flag = False
         # 展示batch_size张图片 和 其预测的类别
-        showImage(torchvision.utils.make_grid(images.cpu().data, normalize=True), ['Origin',' - eps: 0\n']+[pre], True)
+        savedir = r'C:\Users\99785\Desktop\APGD\origin.png'
+        showImage(torchvision.utils.make_grid(images.cpu().data, normalize=True), ['Origin',' - eps: 0\n'] + [pre], savedir, title_flag=True, is_save=True)
 
 # 预测的平均正确率
 print('Accuracy of test text: %f %%' % (100 * float(correct) / total))
@@ -65,16 +66,16 @@ print('Accuracy of test text: %f %%' % (100 * float(correct) / total))
 
 """攻击后正确率"""
 # 攻击参数
-epss = [0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1]
+epss = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
 # epss = [0.1,0.2,0.3] # 测试生成对抗样本的速度
 # epss = np.linspace(0.01, 1, 100) #0.01
-plot_eps = [0.1,0.3,0.5,0.7,0.9]
+plot_eps = [0.1, 0.3, 0.5, 0.7, 0.9]
 
 # attack_methods = [FFGSM]
 # attack_methods_str = ['FFGSM']
 
-attack_methods_with_steps = [APGD]  #, TPGD, CW, DeepFool]
-attack_methods_with_steps_str = ['APGD']  #, 'TPGD', 'CW', 'DeepFool']
+attack_methods_with_steps = [APGD, TPGD, CW, DeepFool]
+attack_methods_with_steps_str = ['APGD', 'TPGD', 'CW', 'DeepFool']
 steps=[ ]
 
 
@@ -103,14 +104,17 @@ for attack_method, attack_method_str in zip(attack_methods_with_steps, attack_me
             correct += (pre == labels).sum()
             # 展示batch_size张图片 和 其预测的类别
             if flag and eps in plot_eps:
-                print(eps)
-                showImage(torchvision.utils.make_grid(images.cpu().data, normalize=True), [attack_method_str+' - eps:',str(eps)+'\n']+[pre], True)
+                # print(eps)
+                savedir = r'C:\Users\99785\Desktop\\' + attack_method_str + '\\' + str(eps) + '.png'
+                showImage(torchvision.utils.make_grid(images.cpu().data, normalize=True), [attack_method_str+' - eps:',str(eps)+'\n']+[pre], savedir, title_flag=True, is_save=True)
                 flag = False
         acc = 100 * float(correct) / total
         print('Accuracy of test text: %f %%' % acc,' with using eps: %f' % eps)
         accuracy.append(acc)
 
     time.sleep(1)
-    plot_eps_acc(attack_method_str+' performance', epss, accuracy)
+
+    savedir = r'C:\Users\99785\Desktop\\' + attack_method_str + '\\statistic.png'
+    plot_eps_acc(attack_method_str+' performance', epss, accuracy, savedir, is_save=True)
 
 

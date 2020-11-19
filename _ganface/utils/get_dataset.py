@@ -86,14 +86,19 @@ def getDataLoader(data_mode, root, json_data_path=r'../data/class_index.json', t
     return ds, Data.DataLoader(ds, batch_size=batch_size, shuffle=shuffle_flag,
                            num_workers=(0 if sys.platform.startswith('win32') else 4))
 
-
+'''
+要不要放进util文件
+'''
 # 展示图片的，传进来的是img 是 Tensor，title是类别
-def showImage(img, title, title_flag=True):
+def showImage(img, title, savedir, title_flag=True, is_save=False):
     npimg = img.numpy()
     fig = plt.figure() # figsize = (5, 5)
     plt.imshow(np.transpose(npimg,(1,2,0)))
     if(title_flag):
         plt.title(str(title[0])+str(title[1])+str(title[2]))
+    # 保存图片
+    if is_save:
+        plt.savefig(savedir)
     plt.show()
 
 
